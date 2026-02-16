@@ -8,7 +8,7 @@ import db from "../config/db.js";
 import redis from "../config/redis.js";
 import bcrypt from "bcrypt";
 import { generateTokenAndSetCookie } from "../utils/generateToken.js";
-import { uploadToR2 } from "../libs/s3.js";
+import { uploadToB2 } from "../libs/s3.js";
 
 
 export const registerUser = async (req, res) => {
@@ -353,7 +353,7 @@ export const onboarding = async (req, res) => {
     }
 
     const file = req.file;
-    const fileUrl = await uploadToR2(
+    const fileUrl = await uploadToB2(
       file.buffer,
       file.originalname,
       file.mimetype
@@ -480,13 +480,13 @@ export const editProfile = async (req, res) => {
 
       if (existingOnboarding && existingOnboarding.img) {
         try {
-          await uploadToR2(existingOnboarding.img);
+          await uploadToB2(existingOnboarding.img);
         } catch (err) {
           console.warn("Failed to delete previous image:", err.message);
         }
       }
 
-      imageUrl = await uploadToR2(
+      imageUrl = await uploadToB2(
         req.file.buffer,
         req.file.originalname,
         req.file.mimetype
