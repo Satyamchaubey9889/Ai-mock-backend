@@ -8,11 +8,10 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 
-// ✅ Backblaze B2 S3 Client
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION, // us-east-005
-  endpoint: process.env.AWS_ENDPOINT, // https://s3.us-east-005.backblazeb2.com
-  forcePathStyle: true, // REQUIRED for Backblaze
+  region: process.env.AWS_REGION,
+  endpoint: process.env.AWS_ENDPOINT,
+  forcePathStyle: true,
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -24,7 +23,7 @@ const BUCKET_NAME = process.env.AWS_BUCKET_NAME;
 export const upload = multer({ storage: multer.memoryStorage() });
 
 
-// ✅ Upload to Backblaze B2
+
 export async function uploadToB2(fileBuffer, originalFilename, contentType) {
   if (!isValidImageType(contentType)) {
     throw new Error("Invalid image type");
@@ -61,7 +60,6 @@ export async function uploadToB2(fileBuffer, originalFilename, contentType) {
 }
 
 
-// ✅ Delete from Backblaze B2
 export async function deleteFromB2(imageUrl) {
   try {
     const url = new URL(imageUrl);
@@ -80,7 +78,7 @@ export async function deleteFromB2(imageUrl) {
 }
 
 
-// ✅ Generate signed URL from Backblaze B2
+
 export async function getSignedUrlFromB2(key, expiresIn = 3600) {
   const command = new GetObjectCommand({
     Bucket: BUCKET_NAME,
@@ -91,7 +89,6 @@ export async function getSignedUrlFromB2(key, expiresIn = 3600) {
 }
 
 
-// ✅ Validate image types
 export function isValidImageType(contentType) {
   return ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"]
     .includes(contentType.toLowerCase());
