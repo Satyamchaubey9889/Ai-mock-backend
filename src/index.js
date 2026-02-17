@@ -27,15 +27,15 @@ if (fs.existsSync(swaggerPath)) {
 }
 
 
-const app=express();
-const Port=process.env.PORT || 10000;
+const app = express();
+const Port = process.env.PORT;
 
 
 // all  middlewares
 app.use(morgan('dev'));
 app.use(
   cors({
-    origin: true,   
+    origin: true,
     credentials: true,
   })
 );
@@ -49,30 +49,30 @@ app.use(cookieParser());
 // all routes
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.get('/health',(req,res)=>{
+app.get('/health', (req, res) => {
   res.status(200).json({
-    message:"Server Running Good"
+    message: "Server Running Good"
   })
 });
 
 
-app.use('/api/v1',UserRouter);
-app.use("/api/v1/contact" , ContactRouter)
-app.use('/api/v1/interview',InterviewRouter);
+app.use('/api/v1', UserRouter);
+app.use("/api/v1/contact", ContactRouter)
+app.use('/api/v1/interview', InterviewRouter);
 app.post("/api/v1/logout", (req, res) => {
   res.clearCookie("token", { httpOnly: true, sameSite: "strict" });
   res.json({ message: "Logged out successfully" });
 });
-app.use("/api/v1/subscription",SubscriptionRouter)
-app.use("/api/v1/admin",AdminRouter)
+app.use("/api/v1/subscription", SubscriptionRouter)
+app.use("/api/v1/admin", AdminRouter)
 
-app.use("/api/v1/resume" , ResumeRouter)
+app.use("/api/v1/resume", ResumeRouter)
 
 
-app.listen(Port,()=>{
-  console.log(`Backend Server Started at http://localhost:${Port}/health ||  http://localhost:8082/docs/ 
+app.listen(Port, () => {
+  console.log(`Backend Server Started at http://localhost:${Port}/health ||  http://localhost:${Port}/docs/ 
     `);
-  
+
 })
 
 
